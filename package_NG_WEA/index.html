@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>M�t�o Lagos</title>
+  <style>
+  
+  
+
+    body {
+	 
+      width: 308px;
+      height: 308px;	  
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+	  color: white;      
+      border: 1px solid #333;    
+	  overflow: hidden;    
+    }
+	
+	.box {
+	  position:relative;
+      width: 308px;
+      height: 308px;
+	  color: white;  
+      box-sizing: border-box;	
+      background-image: linear-gradient(to bottom, #024, #bdf);  
+  
+	}
+ 	.ville {
+      font-size: 2em;
+	  font-family: Arial;
+	  text-align:right;
+	  position: absolute;
+	  size : 60px;
+	  top: 10px;
+      left: 20px;
+    }  
+	.jour {
+      margin: 10px 0;
+      font-size: 1.5em;
+	  font-family: Arial;
+	  text-align:right;
+
+	  position: absolute;
+	  size : 60px;
+	  top: 30px;
+      left: 20px;
+				
+    }
+	.date {
+      margin: 10px 0;
+      font-size: 0.9em;
+	  font-family: Arial;
+	  	  position: absolute;
+	  				size : 60px;
+				top: 60px;
+				left: 20px;
+    }
+	.time {
+      margin: 10px 0;
+      font-size: 0.9em;
+	  font-family: Arial;
+	  	  position: absolute;
+				size : 60px;
+				top: 60px;
+				left: 100px;	  
+    }
+	.wind {
+      margin: 10px 0;
+      font-size: 0.8em;
+	  font-family: Arial;
+	  	  position: absolute;
+	  				size : 60px;
+				top: 30px;
+				left: 200px;
+    }
+	.humidity {
+      margin: 10px 0;
+      font-size: 0.8em;
+	  font-family: Arial;
+	  position: absolute;
+	  size : 60px;
+	  top: 50px;
+	  left: 200px;
+    }
+	.img {
+	position: absolute;
+	top: 110px;
+	left: 30px;
+	}	
+	
+	.temp {
+      margin: 10px 0;
+      font-size: 3.6em;
+	  font-family: Arial;
+	  position: absolute;
+				size : 100px;
+				top:130px;
+				left: 180px;
+    }
+
+	.tempmin {
+      margin: 10px 0;
+      font-size: 0.8em;
+	  font-family: Arial;
+	  position: absolute;
+	  size : 60px;
+	  top: 10px;
+	  left: 200px;
+    }
+	.box .weatxt {
+      font-size: 3em;
+	  font-family: Arial;
+	  position: relative;
+	  top: 240px;
+  	  text-align: center;
+	  white-space: nowrap;
+	  color:white;
+	}
+	.tempmax {
+      margin: 10px 0;
+      font-size: 0.8em;
+	  font-family: Arial;
+	  position: absolute;
+	  size : 60px;
+	  top: 10px;
+	  left: 260px;
+    }	
+	
+  </style>
+</head>
+<body>
+<div class="box" id="box">
+  <div class="ville" id="ville">Lagos</div>
+  <div class="date" id="date">Date : ...</div>
+  <div class="jour" id="jour">jour : ...</div>
+  <div class="time" id="time">Heure : ...</div>
+  <div class="temp" id="temp">Temp�rature : ...</div>
+  <img class="img" id="logo"  height="120" width="120" >
+  <div class="wind" id="wind">wind : ...</div>
+  <div class="tempmin" id="tempmin">Temp_max:</div>
+  <div class="humidity" id="humidity">humidity ...</div> 
+  <div class="weatxt" id="weathertxt">w</div>
+</div>  
+  <script>
+    function updateTime() {
+      const now = new Date();
+ 
+    }
+
+    async function loadTemp() {
+      try {
+		var tab_jour=new Array("sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satuday");
+		const wdate = new Date();
+		const wtime = new Date();
+		var currenttimestamp = Date.parse(wdate)/1000;
+   	    var  hh = wtime.getHours();
+	    const mm = wtime.getMinutes();
+	    const ampm = hh >= 12 ? 'PM' : 'AM';
+		const wjour = tab_jour[wdate.getDay()];
+	    hh = hh % 12;
+        document.getElementById('date').textContent =  wdate.toLocaleDateString('fr-FR');
+        document.getElementById('time').textContent =  hh.toString().padStart(2,'0') + ':' + mm.toString().padStart(2,'0') + ampm;		
+	    document.getElementById('jour').textContent = wjour;
+	    if (hh == 0) {hh = 12}; 		
+        const response = await fetch('.//METEO.json');
+        const data = await response.json();
+        const temp = data.main.temp;
+		const ville = data.name;
+		const wind = data.wind.speed;
+		const tempmax = data.main.temp_max;
+		var timestamp = data.dt
+		const humidity = data.main.humidity;
+		const tempmin = data.main.temp_min;
+		const weather_id = data.weather[0].id;
+		const weather_txt = data.weather[0].main;
+        var fileage = currenttimestamp-timestamp;
+
+		console.log (data);
+		console.log (timestamp);
+		console.log(currenttimestamp);
+		console.log(currenttimestamp-timestamp);
+				console.log(":"+weather_txt+":");
+
+        if (temp !== undefined && fileage < 3600) {
+          document.getElementById('temp').textContent = temp.toFixed(0)+"\u2103";
+		  document.getElementById('tempmin').textContent = "\u2b07" + tempmin.toFixed(0) +"\u2103"+ " \u2b06"+ tempmax.toFixed(0) +"\u2103";
+		  document.getElementById('wind').textContent = "\ud83d\udca8"+wind.toFixed(1) + "m/s";
+		  document.getElementById('humidity').textContent = "\ud83c\udf22" + humidity + "%";
+		  document.getElementById('weathertxt').textContent = weather_txt;
+		  console.log("id"+Math.trunc(weather_id/100))
+		  switch (Math.trunc(weather_id/100))
+		  {
+			case 2:	  document.getElementById('logo').src = ".//kit-icons//icon_12.png"; break;
+			case 3:	  document.getElementById('logo').src = ".//kit-icons//icon_5.png"; break;
+			case 5:	  document.getElementById('logo').src = ".//kit-icons//icon_7.png"; break;
+			case 6:	  document.getElementById('logo').src = ".//kit-icons//icon_9.png"; break;
+			case 7:	  document.getElementById('logo').src = ".//kit-icons//icon_11.png";
+				if (weather_id == 781) 
+				{
+				document.getElementById('logo').src = ".//kit-icons//icon_14.png";
+				} else
+				{
+				document.getElementById('logo').src = ".//kit-icons//icon_4.png";
+				}
+				break;
+			
+			
+			break;
+		  	case 8:	  
+				if (weather_id == 800) 
+				{
+				document.getElementById('logo').src = ".//kit-icons//icon_0.png";
+				} else
+				{
+				document.getElementById('logo').src = ".//kit-icons//icon_4.png";
+				}
+				break;
+
+			default :document.getElementById('logo').src = ".//kit-icons//icon_1.png"; break;
+		  } 
+        } else {
+          document.getElementById('temp').textContent = "";
+		  document.getElementById('tempmin').textContent = "";
+		  document.getElementById('wind').textContent = "";
+		  document.getElementById('humidity').textContent = "";
+		  document.getElementById('weathertxt').textContent = "";
+		  document.getElementById('logo').src = ".//kit-icons//smile.png";		  
+        }
+      } catch (error) {
+          document.getElementById('temp').textContent = "";
+		  document.getElementById('tempmin').textContent = "";
+		  document.getElementById('wind').textContent = "";
+		  document.getElementById('humidity').textContent = "";
+		  document.getElementById('temp').textContent = "";
+		  document.getElementById('weathertxt').textContent = "";
+		  document.getElementById('logo').src = ".//kit-icons//smile.png";	
+      }
+    }
+
+    loadTemp();
+  </script>
+</body>
+</html>
