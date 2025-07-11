@@ -2,7 +2,7 @@
 
 ## 🛠️ **Tools & Services Used and variation**
 
-| **Category**       | **Tools**                                                                                                                                                                                                 |
+| **Category**       |*************Tools**************                                                                                                                                                                                                 |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Version Control** | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)                                                                                                       |
 | **CI/CD**           | ![Jenkins](https://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=jenkins&logoColor=white)                                                                                                    |
